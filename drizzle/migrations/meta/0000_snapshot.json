@@ -1,0 +1,1293 @@
+{
+  "id": "a63c4d6b-719a-4bdf-93b0-91d62c171f83",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.alunos": {
+      "name": "alunos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cpf": {
+          "name": "cpf",
+          "type": "char(11)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ativo": {
+          "name": "ativo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_alunos_cpf": {
+          "name": "uq_alunos_cpf",
+          "columns": [
+            {
+              "expression": "cpf",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "uq_alunos_email": {
+          "name": "uq_alunos_email",
+          "columns": [
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_alunos_cpf_formato": {
+          "name": "ck_alunos_cpf_formato",
+          "value": "char_length(\"alunos\".\"cpf\") = 11"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.avaliacoes": {
+      "name": "avaliacoes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "turma_id": {
+          "name": "turma_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "aluno_id": {
+          "name": "aluno_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "matricula_id": {
+          "name": "matricula_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "turma_meta_id": {
+          "name": "turma_meta_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "conceito": {
+          "name": "conceito",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "observacao": {
+          "name": "observacao",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ultima_alteracao_em": {
+          "name": "ultima_alteracao_em",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_avaliacoes_matricula_meta": {
+          "name": "uq_avaliacoes_matricula_meta",
+          "columns": [
+            {
+              "expression": "matricula_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "turma_meta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ix_avaliacoes_turma_aluno": {
+          "name": "ix_avaliacoes_turma_aluno",
+          "columns": [
+            {
+              "expression": "turma_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "aluno_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ix_avaliacoes_turma_meta": {
+          "name": "ix_avaliacoes_turma_meta",
+          "columns": [
+            {
+              "expression": "turma_meta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "avaliacoes_turma_id_turmas_id_fk": {
+          "name": "avaliacoes_turma_id_turmas_id_fk",
+          "tableFrom": "avaliacoes",
+          "tableTo": "turmas",
+          "columnsFrom": [
+            "turma_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "avaliacoes_aluno_id_alunos_id_fk": {
+          "name": "avaliacoes_aluno_id_alunos_id_fk",
+          "tableFrom": "avaliacoes",
+          "tableTo": "alunos",
+          "columnsFrom": [
+            "aluno_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "avaliacoes_matricula_id_matriculas_id_fk": {
+          "name": "avaliacoes_matricula_id_matriculas_id_fk",
+          "tableFrom": "avaliacoes",
+          "tableTo": "matriculas",
+          "columnsFrom": [
+            "matricula_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "avaliacoes_turma_meta_id_turma_metas_id_fk": {
+          "name": "avaliacoes_turma_meta_id_turma_metas_id_fk",
+          "tableFrom": "avaliacoes",
+          "tableTo": "turma_metas",
+          "columnsFrom": [
+            "turma_meta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_avaliacoes_conceito": {
+          "name": "ck_avaliacoes_conceito",
+          "value": "\"avaliacoes\".\"conceito\" in ('MANA', 'MPA', 'MA')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.avaliacoes_historico": {
+      "name": "avaliacoes_historico",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "avaliacao_id": {
+          "name": "avaliacao_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "aluno_id": {
+          "name": "aluno_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "turma_id": {
+          "name": "turma_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meta_id": {
+          "name": "meta_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "conceito_anterior": {
+          "name": "conceito_anterior",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conceito_novo": {
+          "name": "conceito_novo",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "alterado_em": {
+          "name": "alterado_em",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "data_referencia": {
+          "name": "data_referencia",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "processado_email": {
+          "name": "processado_email",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ix_historico_aluno_data": {
+          "name": "ix_historico_aluno_data",
+          "columns": [
+            {
+              "expression": "aluno_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "data_referencia",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "processado_email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ix_historico_turma_data": {
+          "name": "ix_historico_turma_data",
+          "columns": [
+            {
+              "expression": "turma_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "data_referencia",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "avaliacoes_historico_avaliacao_id_avaliacoes_id_fk": {
+          "name": "avaliacoes_historico_avaliacao_id_avaliacoes_id_fk",
+          "tableFrom": "avaliacoes_historico",
+          "tableTo": "avaliacoes",
+          "columnsFrom": [
+            "avaliacao_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "avaliacoes_historico_aluno_id_alunos_id_fk": {
+          "name": "avaliacoes_historico_aluno_id_alunos_id_fk",
+          "tableFrom": "avaliacoes_historico",
+          "tableTo": "alunos",
+          "columnsFrom": [
+            "aluno_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "avaliacoes_historico_turma_id_turmas_id_fk": {
+          "name": "avaliacoes_historico_turma_id_turmas_id_fk",
+          "tableFrom": "avaliacoes_historico",
+          "tableTo": "turmas",
+          "columnsFrom": [
+            "turma_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "avaliacoes_historico_meta_id_metas_id_fk": {
+          "name": "avaliacoes_historico_meta_id_metas_id_fk",
+          "tableFrom": "avaliacoes_historico",
+          "tableTo": "metas",
+          "columnsFrom": [
+            "meta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_hist_conceito_anterior": {
+          "name": "ck_hist_conceito_anterior",
+          "value": "\"avaliacoes_historico\".\"conceito_anterior\" is null or \"avaliacoes_historico\".\"conceito_anterior\" in ('MANA', 'MPA', 'MA')"
+        },
+        "ck_hist_conceito_novo": {
+          "name": "ck_hist_conceito_novo",
+          "value": "\"avaliacoes_historico\".\"conceito_novo\" in ('MANA', 'MPA', 'MA')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.email_resumo_itens": {
+      "name": "email_resumo_itens",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email_resumo_id": {
+          "name": "email_resumo_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "avaliacao_historico_id": {
+          "name": "avaliacao_historico_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "turma_id": {
+          "name": "turma_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meta_id": {
+          "name": "meta_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "conceito_anterior": {
+          "name": "conceito_anterior",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conceito_novo": {
+          "name": "conceito_novo",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_email_resumo_itens_historico": {
+          "name": "uq_email_resumo_itens_historico",
+          "columns": [
+            {
+              "expression": "avaliacao_historico_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "email_resumo_itens_email_resumo_id_email_resumos_diarios_id_fk": {
+          "name": "email_resumo_itens_email_resumo_id_email_resumos_diarios_id_fk",
+          "tableFrom": "email_resumo_itens",
+          "tableTo": "email_resumos_diarios",
+          "columnsFrom": [
+            "email_resumo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "email_resumo_itens_avaliacao_historico_id_avaliacoes_historico_id_fk": {
+          "name": "email_resumo_itens_avaliacao_historico_id_avaliacoes_historico_id_fk",
+          "tableFrom": "email_resumo_itens",
+          "tableTo": "avaliacoes_historico",
+          "columnsFrom": [
+            "avaliacao_historico_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "email_resumo_itens_turma_id_turmas_id_fk": {
+          "name": "email_resumo_itens_turma_id_turmas_id_fk",
+          "tableFrom": "email_resumo_itens",
+          "tableTo": "turmas",
+          "columnsFrom": [
+            "turma_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "email_resumo_itens_meta_id_metas_id_fk": {
+          "name": "email_resumo_itens_meta_id_metas_id_fk",
+          "tableFrom": "email_resumo_itens",
+          "tableTo": "metas",
+          "columnsFrom": [
+            "meta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_resumo_item_conc_anterior": {
+          "name": "ck_resumo_item_conc_anterior",
+          "value": "\"email_resumo_itens\".\"conceito_anterior\" is null or \"email_resumo_itens\".\"conceito_anterior\" in ('MANA', 'MPA', 'MA')"
+        },
+        "ck_resumo_item_conc_novo": {
+          "name": "ck_resumo_item_conc_novo",
+          "value": "\"email_resumo_itens\".\"conceito_novo\" in ('MANA', 'MPA', 'MA')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.email_resumos_diarios": {
+      "name": "email_resumos_diarios",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "aluno_id": {
+          "name": "aluno_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_referencia": {
+          "name": "data_referencia",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDENTE'"
+        },
+        "assunto": {
+          "name": "assunto",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "corpo": {
+          "name": "corpo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tentativas": {
+          "name": "tentativas",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "gerado_em": {
+          "name": "gerado_em",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "enviado_em": {
+          "name": "enviado_em",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "erro_ultimo_envio": {
+          "name": "erro_ultimo_envio",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_email_resumos_aluno_data": {
+          "name": "uq_email_resumos_aluno_data",
+          "columns": [
+            {
+              "expression": "aluno_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "data_referencia",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ix_email_resumos_status_data": {
+          "name": "ix_email_resumos_status_data",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "data_referencia",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "email_resumos_diarios_aluno_id_alunos_id_fk": {
+          "name": "email_resumos_diarios_aluno_id_alunos_id_fk",
+          "tableFrom": "email_resumos_diarios",
+          "tableTo": "alunos",
+          "columnsFrom": [
+            "aluno_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_email_resumos_status": {
+          "name": "ck_email_resumos_status",
+          "value": "\"email_resumos_diarios\".\"status\" in ('PENDENTE', 'ENVIADO', 'ERRO', 'CANCELADO')"
+        },
+        "ck_email_resumos_tentativas": {
+          "name": "ck_email_resumos_tentativas",
+          "value": "\"email_resumos_diarios\".\"tentativas\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.matriculas": {
+      "name": "matriculas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "turma_id": {
+          "name": "turma_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "aluno_id": {
+          "name": "aluno_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ATIVA'"
+        },
+        "matriculado_em": {
+          "name": "matriculado_em",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "desmatriculado_em": {
+          "name": "desmatriculado_em",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observacao": {
+          "name": "observacao",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_matriculas_turma_aluno": {
+          "name": "uq_matriculas_turma_aluno",
+          "columns": [
+            {
+              "expression": "turma_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "aluno_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ix_matriculas_aluno": {
+          "name": "ix_matriculas_aluno",
+          "columns": [
+            {
+              "expression": "aluno_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ix_matriculas_turma_status": {
+          "name": "ix_matriculas_turma_status",
+          "columns": [
+            {
+              "expression": "turma_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "matriculas_turma_id_turmas_id_fk": {
+          "name": "matriculas_turma_id_turmas_id_fk",
+          "tableFrom": "matriculas",
+          "tableTo": "turmas",
+          "columnsFrom": [
+            "turma_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "matriculas_aluno_id_alunos_id_fk": {
+          "name": "matriculas_aluno_id_alunos_id_fk",
+          "tableFrom": "matriculas",
+          "tableTo": "alunos",
+          "columnsFrom": [
+            "aluno_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_matriculas_status": {
+          "name": "ck_matriculas_status",
+          "value": "\"matriculas\".\"status\" in ('ATIVA', 'CANCELADA', 'CONCLUIDA')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.metas": {
+      "name": "metas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "codigo": {
+          "name": "codigo",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ativa": {
+          "name": "ativa",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_metas_codigo": {
+          "name": "uq_metas_codigo",
+          "columns": [
+            {
+              "expression": "codigo",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "uq_metas_nome": {
+          "name": "uq_metas_nome",
+          "columns": [
+            {
+              "expression": "nome",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.turma_metas": {
+      "name": "turma_metas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "turma_id": {
+          "name": "turma_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meta_id": {
+          "name": "meta_id",
+          "type": "bigserial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordem_exibicao": {
+          "name": "ordem_exibicao",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "ativa": {
+          "name": "ativa",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_turma_metas_turma_meta": {
+          "name": "uq_turma_metas_turma_meta",
+          "columns": [
+            {
+              "expression": "turma_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "meta_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ix_turma_metas_turma_ordem": {
+          "name": "ix_turma_metas_turma_ordem",
+          "columns": [
+            {
+              "expression": "turma_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ordem_exibicao",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "turma_metas_turma_id_turmas_id_fk": {
+          "name": "turma_metas_turma_id_turmas_id_fk",
+          "tableFrom": "turma_metas",
+          "tableTo": "turmas",
+          "columnsFrom": [
+            "turma_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "turma_metas_meta_id_metas_id_fk": {
+          "name": "turma_metas_meta_id_metas_id_fk",
+          "tableFrom": "turma_metas",
+          "tableTo": "metas",
+          "columnsFrom": [
+            "meta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_turma_metas_ordem": {
+          "name": "ck_turma_metas_ordem",
+          "value": "\"turma_metas\".\"ordem_exibicao\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.turmas": {
+      "name": "turmas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "topico": {
+          "name": "topico",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ano": {
+          "name": "ano",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "semestre": {
+          "name": "semestre",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ativa": {
+          "name": "ativa",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_turmas_topico_periodo": {
+          "name": "uq_turmas_topico_periodo",
+          "columns": [
+            {
+              "expression": "topico",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ano",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "semestre",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ix_turmas_periodo": {
+          "name": "ix_turmas_periodo",
+          "columns": [
+            {
+              "expression": "ano",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "semestre",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_turmas_ano": {
+          "name": "ck_turmas_ano",
+          "value": "\"turmas\".\"ano\" between 2000 and 2100"
+        },
+        "ck_turmas_semestre": {
+          "name": "ck_turmas_semestre",
+          "value": "\"turmas\".\"semestre\" in (1, 2)"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
