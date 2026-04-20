@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -File \".specify/extensions/git/scripts/powershell/create-new-feature.ps1\" -Json -ShortName \"student-evaluation-system\" \"Sistema de Gerenciamento de Alunos e Avaliacoes\")",
+      "Bash(powershell -File \".specify/scripts/powershell/setup-plan.ps1\" -Json)",
+      "Bash(powershell -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json)"
+    ]
+  }
+}
