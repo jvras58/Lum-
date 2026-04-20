@@ -1,8 +1,16 @@
+import "dotenv/config"
 import { drizzle } from "drizzle-orm/node-postgres"
 import { Pool } from "pg"
 import * as schema from "../src/db/schema"
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL! })
+const databaseUrl = process.env.DATABASE_URL
+if (!databaseUrl) {
+  throw new Error(
+    "Missing DATABASE_URL environment variable. Copy .env.example to .env and set DATABASE_URL before running pnpm db:seed."
+  )
+}
+
+const pool = new Pool({ connectionString: databaseUrl })
 const db = drizzle(pool, { schema })
 
 async function seed() {
