@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -File \".specify/extensions/git/scripts/powershell/create-new-feature.ps1\" -Json -ShortName \"student-evaluation-system\" \"Sistema de Gerenciamento de Alunos e Avaliacoes\")",
+      "Bash(powershell -File \".specify/scripts/powershell/setup-plan.ps1\" -Json)",
+      "Bash(powershell -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json)",
+      "Bash(powershell -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json -RequireTasks -IncludeTasks)",
+      "Bash(node -e \"const p = require\\('./package.json'\\); const deps = {...p.dependencies,...p.devDependencies}; const radix = Object.keys\\(deps\\).filter\\(k=>k.startsWith\\('@radix-ui'\\)\\); console.log\\(radix.join\\('\\\\n'\\)\\)\")",
+      "Bash(pnpm install *)",
+      "Bash(pnpm lint *)",
+      "Bash(npx eslint *)",
+      "Bash(node -e \"require\\('@eslint/eslintrc'\\)\")",
+      "Bash(powershell *)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm tsc *)",
+      "Bash(pnpm test:components)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
