@@ -15,7 +15,10 @@
       "Bash(pnpm tsc *)",
       "Bash(pnpm test:components)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(npm uninstall *)",
+      "Bash(npm install *)",
+      "Bash(pnpm remove *)"
     ]
   }
 }
