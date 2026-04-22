@@ -107,14 +107,27 @@ conforme constituição).
 
 ---
 
-## 5. Envio de email: abstração sobre provedor
+## 5. Envio de email: provedor único Resend
 
-**Decision**: Módulo `src/lib/email.ts` com interface `EmailProvider` abstraindo Nodemailer
-(SMTP) ou Resend/SendGrid (API) conforme variável de ambiente `EMAIL_PROVIDER`
+**Decision**: Módulo `src/lib/email.ts` usa exclusivamente o SDK oficial do Resend
+(`resend` npm package). Sem abstração multi-provedor — provedor único simplifica
+manutenção e elimina código morto.
 
 **Rationale**: O escopo cobre apenas geração, enfileiramento e rastreamento (spec
-assumption). A abstração permite trocar o provedor sem alterar a lógica de
-consolidação. O módulo é `server-only`.
+assumption). O Resend oferece API HTTP simples, SDK TypeScript first-party e entrega
+confiável sem necessidade de gerenciar servidor SMTP. A chave de API é lida de
+`process.env.RESEND_API_KEY`. O módulo é `server-only`.
+
+**Key implementation**:
+```typescript
+const resend = new Resend(process.env.RESEND_API_KEY)
+const { error } = await resend.emails.send({ from, to, subject, html })
+if (error) throw new Error(error.message)
+```
+
+**Alternatives considered**:
+- Nodemailer (SMTP): requer infraestrutura SMTP externa, mais configuração,
+  tipagem menos precisa. Removido em favor do Resend.
 
 ---
 

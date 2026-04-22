@@ -224,7 +224,7 @@ See [research.md](./research.md) for full decisions. Key resolved points:
 | Batch save | Single `db.transaction()` with upsert + historico insert |
 | Email idempotency | `onConflictDoNothing` + `processado_email` flag |
 | Cron trigger | Route Handler (not Server Action) — external caller |
-| Email provider | Abstracted behind `EmailProvider` interface |
+| Email provider | Resend SDK — único provedor oficial (`RESEND_API_KEY`) |
 | Auth | Placeholder `assertAuthenticated()` — out of scope for v1 |
 | Filters/search | TanStack Query + `ilike` Drizzle queries |
 | Integration tests | Vitest + real PostgreSQL + rollback per test |

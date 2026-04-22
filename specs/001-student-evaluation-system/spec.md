@@ -252,8 +252,9 @@ o monitor exibe os três corretamente com filtro por status funcional.
   escopo desta entrega.
 - Há um único papel de usuário autenticado (Professor); controle de acesso por perfis
   múltiplos ou hierarquia de permissões está fora do escopo desta versão.
-- O serviço de envio de email (SMTP ou API de transação) é configurado externamente ao
-  sistema; o escopo cobre somente a geração, enfileiramento e rastreamento dos emails.
+- O envio de email é realizado exclusivamente via Resend (SDK oficial); a chave de API
+  (`RESEND_API_KEY`) é configurada externamente. O escopo cobre somente a geração,
+  enfileiramento e rastreamento dos emails.
 - A rotina de consolidação e envio de emails é disparada por agendamento externo
   (cron ou similar); o sistema não inclui scheduler interno nesta versão.
 - Alunos não possuem acesso ao sistema; recebem apenas os emails gerados pelo processo

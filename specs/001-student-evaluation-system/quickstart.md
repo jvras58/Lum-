@@ -29,10 +29,8 @@ cp .env.example .env.local
 # Edit .env.local:
 #   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/lum_dev
 #   SECRET_CRON_TOKEN=<generate with: openssl rand -hex 32>
-#   EMAIL_PROVIDER=smtp  # or resend
-#   SECRET_SMTP_HOST=...
-#   SECRET_SMTP_USER=...
-#   SECRET_SMTP_PASS=...
+#   RESEND_API_KEY=re_your_api_key_here
+#   EMAIL_FROM=no-reply@yourdomain.com
 
 # 4. Generate and apply migrations
 pnpm drizzle-kit generate
@@ -199,13 +197,8 @@ npx shadcn@latest add <component-name>
 |----------|----------|-------------|
 | `DATABASE_URL` | Yes | PostgreSQL connection string |
 | `SECRET_CRON_TOKEN` | Yes | Bearer token for cron endpoint |
-| `EMAIL_PROVIDER` | Yes | `smtp` or `resend` |
-| `SECRET_SMTP_HOST` | If smtp | SMTP server hostname |
-| `SECRET_SMTP_PORT` | If smtp | SMTP port (default 587) |
-| `SECRET_SMTP_USER` | If smtp | SMTP auth username |
-| `SECRET_SMTP_PASS` | If smtp | SMTP auth password |
-| `SECRET_RESEND_API_KEY` | If resend | Resend API key |
-| `EMAIL_FROM` | Yes | Sender address (non-secret) |
+| `RESEND_API_KEY` | Yes | Resend API key (https://resend.com) |
+| `EMAIL_FROM` | Yes | Sender address (must be a verified domain in Resend) |
 
 ---
 
