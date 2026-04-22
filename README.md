@@ -311,6 +311,22 @@ curl -X POST http://localhost:3000/api/cron/consolidate-emails \
   -H "Content-Type: application/json"
 ```
 
+> PowerShell note: use `curl.exe` instead of `curl`, or use the native PowerShell request syntax below.
+
+```powershell
+curl.exe -X POST http://localhost:3000/api/cron/consolidate-emails `
+  -H "Authorization: Bearer <SECRET_CRON_TOKEN>" `
+  -H "Content-Type: application/json"
+```
+
+```powershell
+Invoke-RestMethod -Method Post -Uri http://localhost:3000/api/cron/consolidate-emails `
+  -Headers @{ 
+    Authorization = "Bearer <SECRET_CRON_TOKEN>" 
+    "Content-Type" = "application/json" 
+  }
+```
+
 Resposta esperada:
 
 ```json
