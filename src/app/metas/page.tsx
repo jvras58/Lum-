@@ -12,39 +12,50 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Target, Plus } from "lucide-react"
 
 export default async function MetasPage() {
   const rows = await db.select().from(metas).orderBy(asc(metas.codigo))
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Metas</h1>
-          <p className="text-muted-foreground text-sm">Catálogo de metas avaliativas</p>
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2.5">
+            <Target className="h-6 w-6 text-primary" />
+            Metas
+          </h1>
+          <p className="text-muted-foreground text-sm mt-1">Catálogo de metas avaliativas</p>
         </div>
-        <Button asChild>
-          <Link href="/metas/nova">Nova meta</Link>
+        <Button asChild className="gap-2">
+          <Link href="/metas/nova">
+            <Plus className="h-4 w-4" />
+            Nova meta
+          </Link>
         </Button>
       </div>
 
-      <div className="border rounded-md">
+      <div className="rounded-lg border border-border/60 overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Código</TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead>Descrição</TableHead>
-              <TableHead>Status</TableHead>
+            <TableRow className="bg-muted/40 hover:bg-muted/40">
+              <TableHead className="font-semibold text-foreground">Código</TableHead>
+              <TableHead className="font-semibold text-foreground">Nome</TableHead>
+              <TableHead className="font-semibold text-foreground">Descrição</TableHead>
+              <TableHead className="font-semibold text-foreground">Status</TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((meta) => (
-              <TableRow key={String(meta.id)}>
-                <TableCell className="font-mono text-xs">{meta.codigo}</TableCell>
+              <TableRow key={String(meta.id)} className="hover:bg-muted/20">
+                <TableCell>
+                  <span className="font-mono text-xs bg-muted px-2 py-0.5 rounded">
+                    {meta.codigo}
+                  </span>
+                </TableCell>
                 <TableCell className="font-medium">{meta.nome}</TableCell>
-                <TableCell className="text-muted-foreground text-xs">
+                <TableCell className="text-muted-foreground text-xs max-w-xs">
                   {meta.descricao ?? "—"}
                 </TableCell>
                 <TableCell>
@@ -61,8 +72,11 @@ export default async function MetasPage() {
             ))}
             {rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                  Nenhuma meta cadastrada.
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-14">
+                  <div className="flex flex-col items-center gap-2">
+                    <Target className="h-8 w-8 opacity-20" />
+                    <p className="text-sm">Nenhuma meta cadastrada.</p>
+                  </div>
                 </TableCell>
               </TableRow>
             )}

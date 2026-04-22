@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Bell } from "lucide-react"
 
 type Row = EmailResumoDiario & { aluno: Aluno }
 
@@ -45,7 +46,7 @@ function CancelButton({ id }: { id: string }) {
       size="sm"
       onClick={handleCancel}
       disabled={isPending}
-      className="text-destructive hover:text-destructive"
+      className="text-destructive hover:text-destructive hover:bg-destructive/10"
     >
       {isPending ? "…" : "Cancelar"}
     </Button>
@@ -59,34 +60,35 @@ interface Props {
 export function NotificacoesTable({ rows }: Props) {
   if (rows.length === 0) {
     return (
-      <div className="border rounded-md py-8 text-center text-muted-foreground text-sm">
-        Nenhuma notificação encontrada.
+      <div className="rounded-lg border border-dashed border-border py-14 text-center">
+        <Bell className="h-8 w-8 text-muted-foreground/25 mx-auto mb-3" />
+        <p className="text-muted-foreground text-sm">Nenhuma notificação encontrada.</p>
       </div>
     )
   }
 
   return (
-    <div className="border rounded-md">
+    <div className="rounded-lg border border-border/60 overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Aluno</TableHead>
-            <TableHead>Data ref.</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-center">Tentativas</TableHead>
-            <TableHead>Gerado em</TableHead>
-            <TableHead>Enviado em</TableHead>
+          <TableRow className="bg-muted/40 hover:bg-muted/40">
+            <TableHead className="font-semibold text-foreground">Aluno</TableHead>
+            <TableHead className="font-semibold text-foreground">Data ref.</TableHead>
+            <TableHead className="font-semibold text-foreground">Status</TableHead>
+            <TableHead className="font-semibold text-foreground text-center">Tentativas</TableHead>
+            <TableHead className="font-semibold text-foreground">Gerado em</TableHead>
+            <TableHead className="font-semibold text-foreground">Enviado em</TableHead>
             <TableHead />
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={String(row.id)}>
+            <TableRow key={String(row.id)} className="hover:bg-muted/20">
               <TableCell>
-                <p className="font-medium">{row.aluno.nome}</p>
+                <p className="font-medium text-sm">{row.aluno.nome}</p>
                 <p className="text-xs text-muted-foreground">{row.aluno.email}</p>
               </TableCell>
-              <TableCell className="font-mono text-xs">
+              <TableCell className="font-mono text-xs text-muted-foreground">
                 {String(row.dataReferencia)}
               </TableCell>
               <TableCell>
@@ -102,11 +104,11 @@ export function NotificacoesTable({ rows }: Props) {
                   </p>
                 )}
               </TableCell>
-              <TableCell className="text-center">{row.tentativas}</TableCell>
-              <TableCell className="text-xs text-muted-foreground">
+              <TableCell className="text-center tabular-nums">{row.tentativas}</TableCell>
+              <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                 {row.geradoEm ? new Date(row.geradoEm).toLocaleString("pt-BR") : "—"}
               </TableCell>
-              <TableCell className="text-xs text-muted-foreground">
+              <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                 {row.enviadoEm ? new Date(row.enviadoEm).toLocaleString("pt-BR") : "—"}
               </TableCell>
               <TableCell className="text-right">
