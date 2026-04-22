@@ -24,7 +24,7 @@ export default async function DashboardPage() {
     { label: "Alunos ativos",         value: stats.alunos,    href: "/alunos" },
     { label: "Turmas ativas",          value: stats.turmas,    href: "/turmas" },
     { label: "Notificações pendentes", value: stats.pendentes, href: "/notificacoes" },
-  ]
+  ] as const
 
   return (
     <div className="space-y-6">

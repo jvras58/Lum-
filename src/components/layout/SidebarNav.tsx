@@ -18,7 +18,7 @@ const navItems = [
   { href: "/turmas",       label: "Turmas",       icon: BookOpen },
   { href: "/metas",        label: "Metas",        icon: Target },
   { href: "/notificacoes", label: "Notificações", icon: Bell },
-]
+] as const
 
 export function SidebarNav() {
   const pathname = usePathname()
