@@ -3,13 +3,14 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/layout/ThemeToggle"
 import {
   LayoutDashboard,
   Users,
   BookOpen,
   Target,
   Bell,
+  GraduationCap,
 } from "lucide-react"
 
 const navItems = [
@@ -24,27 +25,54 @@ export function SidebarNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="w-56 border-r bg-card flex flex-col py-6 px-3 gap-1 shrink-0">
-      <div className="px-3 mb-6">
-        <h1 className="text-lg font-bold tracking-tight">Lum</h1>
-        <p className="text-xs text-muted-foreground">Gestão de Avaliações</p>
+    <nav className="w-60 border-r bg-card flex flex-col shrink-0 h-screen sticky top-0">
+      {/* Brand */}
+      <div className="px-5 py-5 border-b">
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center shadow-sm">
+            <GraduationCap className="h-5 w-5 text-primary-foreground" />
+          </div>
+          <div>
+            <p className="font-bold text-sm tracking-tight leading-none">Lum</p>
+            <p className="text-[10px] text-muted-foreground leading-none mt-1">
+              Gestão de Avaliações
+            </p>
+          </div>
+        </div>
       </div>
-      {navItems.map(({ href, label, icon: Icon }) => (
-        <Link
-          key={href}
-          href={href}
-          className={cn(
-            buttonVariants({ variant: "ghost", size: "sm" }),
-            "justify-start gap-3 w-full",
-            pathname === href || (href !== "/" && pathname.startsWith(href))
-              ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-              : "text-muted-foreground"
-          )}
-        >
-          <Icon className="h-4 w-4" />
-          {label}
-        </Link>
-      ))}
+
+      {/* Nav items */}
+      <div className="flex-1 px-3 py-4">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground px-3 mb-2">
+          Menu
+        </p>
+        <div className="space-y-0.5">
+          {navItems.map(({ href, label, icon: Icon }) => {
+            const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href)
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-primary/10 text-primary dark:bg-primary/20"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                )}
+              >
+                <Icon className={cn("h-4 w-4 shrink-0", isActive && "text-primary")} />
+                {label}
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Theme toggle footer */}
+      <div className="px-5 py-4 border-t flex items-center justify-between">
+        <p className="text-xs text-muted-foreground">Aparência</p>
+        <ThemeToggle />
+      </div>
     </nav>
   )
 }
