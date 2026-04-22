@@ -1,5 +1,7 @@
 import "server-only"
-import nodemailer from "nodemailer"
+import { Resend } from "resend"
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export interface EmailMessage {
   to: string
@@ -7,43 +9,20 @@ export interface EmailMessage {
   html: string
 }
 
-export interface EmailProvider {
-  send(message: EmailMessage): Promise<void>
-}
-
-class NodemailerProvider implements EmailProvider {
-  private transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST ?? "localhost",
-    port: Number(process.env.SMTP_PORT ?? 1025),
-    secure: process.env.SMTP_SECURE === "true",
-    auth: process.env.SMTP_USER
-      ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
-      : undefined,
+async function send(message: EmailMessage): Promise<void> {
+  const { error } = await resend.emails.send({
+    from: process.env.EMAIL_FROM ?? "no-reply@example.com",
+    to: message.to,
+    subject: message.subject,
+    html: message.html,
   })
-
-  async send(message: EmailMessage): Promise<void> {
-    await this.transporter.sendMail({
-      from: process.env.EMAIL_FROM ?? "no-reply@lum.local",
-      to: message.to,
-      subject: message.subject,
-      html: message.html,
-    })
-  }
+  if (error) throw new Error(error.message)
 }
-
-class ConsoleProvider implements EmailProvider {
-  async send(message: EmailMessage): Promise<void> {
-    console.log("[email:console]", JSON.stringify({ to: message.to, subject: message.subject }))
-  }
-}
-
-export const emailProvider: EmailProvider =
-  process.env.EMAIL_PROVIDER === "nodemailer" ? new NodemailerProvider() : new ConsoleProvider()
 
 export async function enviarEmailsPendentes(): Promise<{ sent: number; errors: number }> {
   const { db } = await import("@/db")
-  const { emailResumosDiarios, alunos } = await import("@/db/schema")
-  const { eq, lte } = await import("drizzle-orm")
+  const { emailResumosDiarios } = await import("@/db/schema")
+  const { eq } = await import("drizzle-orm")
   const { logger } = await import("@/lib/logger")
 
   const pendentes = await db.query.emailResumosDiarios.findMany({
@@ -56,7 +35,7 @@ export async function enviarEmailsPendentes(): Promise<{ sent: number; errors: n
 
   for (const resumo of pendentes) {
     try {
-      await emailProvider.send({
+      await send({
         to: resumo.aluno.email,
         subject: resumo.assunto,
         html: resumo.corpo,
