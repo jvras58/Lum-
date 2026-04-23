@@ -45,71 +45,70 @@ TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5433/lum_test
 # Gere com: openssl rand -hex 32
 SECRET_CRON_TOKEN=troque-por-um-token-seguro
 
-# Provedor de email: "smtp" ou "resend"
-EMAIL_PROVIDER=smtp
-
-# Configuração SMTP (se EMAIL_PROVIDER=smtp)
-SECRET_SMTP_HOST=smtp.exemplo.com
-SECRET_SMTP_PORT=587
-SECRET_SMTP_USER=usuario@exemplo.com
-SECRET_SMTP_PASS=senha-smtp
-
-# Configuração Resend (se EMAIL_PROVIDER=resend)
-SECRET_RESEND_API_KEY=re_xxxxxxxxxxxx
-
-# Endereço remetente (não é segredo)
-EMAIL_FROM=noreply@exemplo.com
+# Email — Resend (único provedor suportado)
+RESEND_API_KEY=re_xxxxxxxxxxxx
+EMAIL_FROM=onboarding@resend.dev
 ```
 
-> **Segurança**: variáveis que começam com `SECRET_` são exclusivamente server-side e nunca devem ser prefixadas com `NEXT_PUBLIC_`.
+> **Segurança**: `RESEND_API_KEY` e `SECRET_CRON_TOKEN` são variáveis exclusivamente server-side. Nunca as exponha no código-fonte nem use o prefixo `NEXT_PUBLIC_`.
 
 ---
 
-## 2a. Configurar o provedor de email
+## 2a. Configurar o Resend (provedor de email)
 
-O sistema suporta dois provedores: **SMTP genérico** e **Resend**. Escolha um e ajuste o `.env.local` conforme descrito abaixo.
+O sistema usa exclusivamente o [Resend](https://resend.com) como provedor de email transacional (plano gratuito: 3 000 emails/mês, 100/dia).
 
-### Opção A — SMTP genérico
+### Passo 1 — Criar conta e gerar API Key
 
-Qualquer servidor SMTP funciona (Gmail, Outlook, Mailgun, SendGrid, etc.).
-
-```dotenv
-EMAIL_PROVIDER=smtp
-SECRET_SMTP_HOST=smtp.gmail.com   # host do seu provedor
-SECRET_SMTP_PORT=587              # 587 (STARTTLS) ou 465 (SSL/TLS)
-SECRET_SMTP_USER=seuconta@gmail.com
-SECRET_SMTP_PASS=sua-senha-ou-app-password
-EMAIL_FROM=seuconta@gmail.com
-```
-
-> **Gmail**: habilite autenticação de dois fatores na conta e gere uma [App Password](https://myaccount.google.com/apppasswords) (Senhas de app). Use essa senha em `SECRET_SMTP_PASS` em vez da senha normal da conta.
-
-### Opção B — Resend
-
-[Resend](https://resend.com) é um serviço de email transacional com plano gratuito (3 000 emails/mês, 100/dia).
-
-**Passo a passo:**
-
-1. Crie uma conta em [resend.com](https://resend.com) e faça login.
+1. Acesse [resend.com](https://resend.com) e crie uma conta.
 2. No painel, vá em **API Keys → Create API Key** e copie a chave gerada (começa com `re_`).
-3. (Opcional, mas recomendado para produção) Adicione e verifique o seu domínio em **Domains** para poder enviar de `noreply@seudominio.com`. Em desenvolvimento você pode usar o domínio sandbox do Resend: `onboarding@resend.dev`.
-4. Atualize o `.env.local`:
+3. Adicione ao `.env.local`:
 
 ```dotenv
-EMAIL_PROVIDER=resend
-SECRET_RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxx   # chave copiada no passo 2
-EMAIL_FROM=onboarding@resend.dev                # ou noreply@seudominio.com após verificar o domínio
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxx
 ```
 
-> **SMTP do Resend**: o Resend também expõe um endpoint SMTP (`smtp.resend.com:465`). Se preferir usar `EMAIL_PROVIDER=smtp` apontando para o Resend, configure:
-> ```dotenv
-> EMAIL_PROVIDER=smtp
-> SECRET_SMTP_HOST=smtp.resend.com
-> SECRET_SMTP_PORT=465
-> SECRET_SMTP_USER=resend          # usuário literal "resend"
-> SECRET_SMTP_PASS=re_xxxxxxxxxxxx # sua API key do Resend
-> EMAIL_FROM=noreply@seudominio.com
-> ```
+### Passo 2 — Escolher o modo de envio
+
+O Resend opera em dois modos dependendo da verificação de domínio:
+
+| Modo | `EMAIL_FROM` | Destinatários permitidos |
+|---|---|---|
+| **Teste** (sem domínio) | `onboarding@resend.dev` | Apenas o e-mail da sua conta Resend |
+| **Produção** (domínio verificado) | `noreply@seudominio.com` | Qualquer destinatário |
+
+#### Modo teste — desenvolvimento imediato
+
+Sem nenhuma configuração adicional, use o domínio compartilhado do Resend:
+
+```dotenv
+EMAIL_FROM=onboarding@resend.dev
+```
+
+> **Limitação**: neste modo o Resend só entrega emails para o endereço cadastrado na sua conta (ex.: `jonathas@exemplo.com`). Para testar o fluxo completo, cadastre um aluno com esse endereço ou altere temporariamente o email de um aluno existente no banco.
+
+#### Modo produção — domínio verificado
+
+Para enviar para qualquer destinatário é necessário verificar um domínio:
+
+1. No painel do Resend, acesse **Domains → Add Domain** e informe seu domínio.
+2. Adicione os registros DNS fornecidos pelo Resend no painel do seu registrador:
+
+| Tipo | Nome | Valor |
+|---|---|---|
+| `TXT` | `@` ou `resend._domainkey` | Fornecido pelo Resend (SPF/DKIM) |
+| `TXT` | `_dmarc` | `v=DMARC1; p=none;` (mínimo recomendado) |
+
+3. Clique em **Verify DNS Records** no painel do Resend (pode levar alguns minutos).
+4. Após verificado, atualize o `.env.local`:
+
+```dotenv
+# Formato simples
+EMAIL_FROM=noreply@seudominio.com
+
+# Formato com nome do remetente (recomendado)
+EMAIL_FROM=Lum <noreply@seudominio.com>
+```
 
 ---
 
@@ -474,6 +473,20 @@ O `@` no nome da pasta `Lum@` pode causar problemas com alguns terminais. Use as
 ```bash
 cd "C:\Users\seu-usuario\Desktop\Lum@"
 ```
+
+### Erro Resend: "You can only send testing emails to your own email address"
+
+O Resend bloqueia envios para destinatários externos quando não há domínio verificado. Soluções:
+
+**Desenvolvimento**: altere o email do aluno no banco para o endereço da sua conta Resend:
+
+```sql
+UPDATE alunos SET email = 'seu@email.com' WHERE id = <id>;
+```
+
+**Produção**: verifique um domínio em [resend.com/domains](https://resend.com/domains) e troque `EMAIL_FROM` para `noreply@seudominio.com` no `.env.local`. Veja a seção [2a](#2a-configurar-o-resend-provedor-de-email) para o passo a passo completo.
+
+---
 
 ### Erro `server-only` fora do servidor
 
